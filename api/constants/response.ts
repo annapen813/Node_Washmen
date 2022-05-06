@@ -11,3 +11,4 @@ export const erroMessage = {
 export const successMessage = {
     createdMessage: "Data has been created successfuly"
 }
+
