@@ -6,9 +6,11 @@ import responseType from '../types/response.type';
 import {getPartners} from '../dataAccess/partners';
 
 /**
- * @api {post} /api/profile/login
- * @apiGroup Profile
- * @apiSuccess (200) {Object} validate the register user
+ * @api {post} /api/partners/get
+ * @apiGroup Partners
+ * @api parameters latitude, longitude, 
+ * @api authoraization token from the login user
+ * @apiSuccess (200) {Object} gives the list of offices within the given range of latitude and longitude
  */
  router.get('/get', async(req, res) => {
 

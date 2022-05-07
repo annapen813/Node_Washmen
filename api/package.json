@@ -5,7 +5,9 @@
   "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon  --watch . webserver/index.ts"
+    "dev": "nodemon  --watch . webserver/index.ts",
+    "start": "ts-node . webserver/index.ts",
+    "build": "tsc -p . webserver/index.ts"
   },
   "author": "ananda",
   "license": "ISC",
