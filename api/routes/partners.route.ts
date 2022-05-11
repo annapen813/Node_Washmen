@@ -16,13 +16,12 @@ import {getPartners} from '../dataAccess/partners';
 
 
     if (req && req.query) {
-        let {lat, lon} = req.query;
+        let {range} = req.query;
         let token = req.headers["authorization"];
 
         let data: IPartnerRequestType = {
             token,
-            lat,
-            lon
+            range
         };
 
         let response = await getPartners(data);

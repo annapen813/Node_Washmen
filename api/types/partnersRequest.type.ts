@@ -1,7 +1,6 @@
 interface IPartnerRequestType  {
   token: string,
-  lat: string,
-  lon: string
+  range: number
 };
 
 export default IPartnerRequestType;

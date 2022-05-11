@@ -11,16 +11,20 @@ const _ = require('lodash');
 
 export async function getPartners(partnersRequest: IPartnerRequestType) {
     try {
-        let { token, lat, lon } = partnersRequest;
+        let { token, range } = partnersRequest;
         let partnerResponses = Array<IPartnerResponseType>();
-        if (token && lat && lon) {
+        if (token && range>0) {
+            
             try {
                 let decoded = jwt.verify(token, jwtKey);
                 if (decoded) {
              
                     try {
-
-                        let data = await partners.aggregate([
+                
+                        let lat = Number(process.env.LAT) || -0.142571;
+                        let lon = Number(process.env.LON) || 51.5144636;                        
+                        
+                        let data = await partners.aggregate([                 
                             {
                                 $unwind: {
                                     path: "$offices"
@@ -31,7 +35,7 @@ export async function getPartners(partnersRequest: IPartnerRequestType) {
                                     "offices": {
                                         "$geoWithin": {
                                             "$centerSphere": [
-                                                [Number(lon), Number(lat)], 5 / 3963.2]
+                                                [Number(lat), Number(lon)], range / 6378.1]
                                         }
                                     }
                                 }
@@ -39,14 +43,11 @@ export async function getPartners(partnersRequest: IPartnerRequestType) {
 
                         ]);
 
+                        console.log(data);
                         if(data) {
                             data.forEach(async(element)=>{
                                 if(element) {
-                                    let distance = await getRangeKms(Number(lon), Number(lat), element.offices.coordinates[0], element.offices.coordinates[1]);
-                                    //console.log('coordinate: ',element.offices.coordinates);
-                                    //console.log('distance: ', distance);
-                                    //console.log('name: ', element.organization);
-                                    //console.log('address: ', element.offices.address);
+                                    let distance = await getRangeKms(lat, lon, element.offices.coordinates[0], element.offices.coordinates[1]);                                
                                     let officeInfo: IPartnerResponseType = {
                                                                             officeName: element.organization, 
                                                                             officeAddress: element.offices.address, 
