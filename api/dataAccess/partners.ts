@@ -35,7 +35,7 @@ export async function getPartners(partnersRequest: IPartnerRequestType) {
                                     "offices": {
                                         "$geoWithin": {
                                             "$centerSphere": [
-                                                [Number(lat), Number(lon)], range / 6378.1]
+                                                [Number(lon), Number(lat)], range / 6378.1]
                                         }
                                     }
                                 }
@@ -47,7 +47,7 @@ export async function getPartners(partnersRequest: IPartnerRequestType) {
                         if(data) {
                             data.forEach(async(element)=>{
                                 if(element) {
-                                    let distance = await getRangeKms(lat, lon, element.offices.coordinates[0], element.offices.coordinates[1]);                                
+                                    let distance = await getRangeKms(lat, lon, element.offices.coordinates[1], element.offices.coordinates[0]);                                
                                     let officeInfo: IPartnerResponseType = {
                                                                             officeName: element.organization, 
                                                                             officeAddress: element.offices.address, 
@@ -55,6 +55,8 @@ export async function getPartners(partnersRequest: IPartnerRequestType) {
                                                                             longitude: element.offices.coordinates[0], 
                                                                             totaldistance: distance };
                                     partnerResponses.push(officeInfo);  
+                                    //Sorting the Office Name in Ascending
+                                    partnerResponses.sort((a, b) => (a.officeName.toLowerCase() < b.officeName.toLowerCase()) ? -1 : 1)
                                 }
                             })
                         }
@@ -62,7 +64,8 @@ export async function getPartners(partnersRequest: IPartnerRequestType) {
                     } catch (e) {
                         console.log(e)
                     }
-                    let response: responseType = { status: responseStatus.success, message: "", data:  partnerResponses};
+                    
+                    let response: responseType = { status: responseStatus.success, message: "", data: partnerResponses};
                     return response;
                 }
             } catch (e) {
